@@ -2,10 +2,10 @@
   <q-page>
     <div class="q-pa-md">
       <q-list bordered separator>
-        <q-item>
-          <q-item-section> Salary </q-item-section>
+        <q-item v-for="entry in entries" :key="entry.id">
+          <q-item-section> {{ entry.name }} </q-item-section>
 
-          <q-item-section side> + $4,999.99 </q-item-section>
+          <q-item-section side> {{ currencify(entry.amount) }} </q-item-section>
         </q-item>
       </q-list>
     </div>
@@ -13,34 +13,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
-interface entries {
-  id: number
+interface entradas {
+  id: string
   name: string
-  amount: string
+  amount: number
 }
 
-const entries = ref([
+const entries: entradas[] = [
   {
-    id: 'id1',
-    name: '',
-    amount: 0,
+    id: '1',
+    name: 'Salary',
+    amount: 4999.99,
   },
   {
-    id: 'id2',
-    name: '',
-    amount: 0,
+    id: '2',
+    name: 'Rent',
+    amount: -999,
   },
   {
-    id: 'id3',
-    name: '',
-    amount: 0,
+    id: '3',
+    name: 'Phone',
+    amount: -14.99,
   },
   {
-    id: 'id4',
-    name: '',
+    id: '4',
+    name: 'Unknown',
     amount: 0,
   },
-])
+]
+
+/* currencify */
+function currencify(amount = 0) {
+  // format: "+ $ 4,999.99 | "- $ 999.00"
+
+  let posNegSymbol = ''
+  if (amount > 0) posNegSymbol = '+'
+  else if (amount < 0) posNegSymbol = '-'
+
+  const currencySymbol = '$',
+    amountPositive = Math.abs(amount),
+    amountFormatted = amountPositive.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+
+  return `${posNegSymbol} ${currencySymbol} ${amountFormatted}`
+}
 </script>
